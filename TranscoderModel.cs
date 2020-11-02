@@ -46,51 +46,14 @@ namespace VideoTranscoderTimePredictor
         //Data pre processing 
         public void BuildPipeline()
         {
-            _pipeline = _mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName:"utime")
 
-            .Append(_mlContext.Transforms.Categorical.OneHotEncoding(inputColumnName: "incodec", outputColumnName: "incodecE"))
-            .Append(_mlContext.Transforms.Categorical.OneHotEncoding(inputColumnName: "outcodec", outputColumnName: "outcodecE"))
-            
-
-
-
-
-            .Append(_mlContext.Transforms.Conversion.ConvertType("inbitrate", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("incodecE", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("induration", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("inframerate", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("inframes", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("inheight", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("inwidth", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("insize", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("outbitrate", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("outcodecE", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("outframerate", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("outheight", outputKind: DataKind.Single))
-            .Append(_mlContext.Transforms.Conversion.ConvertType("outwidth", outputKind: DataKind.Single))
-
-            
-            //Set the features to be used 
-            .Append(_mlContext.Transforms.Concatenate("Features", "inbitrate", "incodecE", "induration",
-             "inframerate", "inframes", "inheight", "inwidth", "insize", "outbitrate", "outcodecE", "outframerate", "outheight", "outwidth"))
-            //cache the pipeline, this will make downstream processes faster
-            .AppendCacheCheckpoint(_mlContext);
         }
 
 
         //Build and train the model
         public void BuildAndTrainModel()
         {
-            // linear regression model
-            //_pipeline = _pipeline.Append(_mlContext.Regression.Trainers.LbfgsPoissonRegression());
 
-            // decision tree
-            _pipeline = _pipeline.Append(_mlContext.Regression.Trainers.FastTree());
-            
-            // random forest
-            //_pipeline = _pipeline.Append(_mlContext.Regression.Trainers.FastForest());
-            
-            _model = _pipeline.Fit(_trainData);
         }
 
 
